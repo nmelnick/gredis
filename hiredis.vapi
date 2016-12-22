@@ -23,8 +23,36 @@
 [CCode (cheader_filename = "hiredis/hiredis.h")]
 namespace Redis {
 
+    /**
+     * Connect to a Redis instance.
+     *
+     * @param ip Hostname or IP address
+     * @param port Port number (defaults to 6379)
+     * @return Redis.Context instance
+     */
     [CCode (cname = "redisConnect")]
-    public Context? connect(string ip, int port);
+    public Context? connect(string ip, int port = 6379);
+
+    [CCode (cname = "redisConnectWithTimeout")]
+    public Context? connect_with_timeout(string ip, int port, TimeVal tv);
+
+    [CCode (cname = "redisConnectNonBlock")]
+    public Context? connect_nonblock(string ip, int port = 6379);
+
+    [CCode (cname = "redisConnectBindNonBlock")]
+    public Context? connect_bind_nonblock(string ip, int port, string source_addr);
+
+    [CCode (cname = "redisConnectBindNonBlockWithReuse")]
+    public Context? connect_bind_nonblock_with_reuse(string ip, int port, string source_addr);
+
+    [CCode (cname = "redisConnectUnix")]
+    public Context? connect_unix(string path);
+
+    [CCode (cname = "redisConnectUnixWithTimeout")]
+    public Context? connect_unix_with_timeout(string path, TimeVal tv);
+
+    [CCode (cname = "redisConnectUnixNonBlock")]
+    public Context? connect_unix_nonblock(string path);
 
     [SimpleType]
     [CCode(cname = "struct timeval")]
@@ -39,6 +67,9 @@ namespace Redis {
         UNIX
     }
     
+    /**
+     * Redis connection context for performing operations.
+     */
     [Compact]
     [CCode (cname = "redisContext", free_function = "redisFree")]
     public class Context {
@@ -46,14 +77,90 @@ namespace Redis {
         public char errstr[128];
         public int fd;
         public int flags;
-        public string obuf;
+        public uint8[] obuf;
         public Reader reader;
         public ConnectionType connection_type;
         public TimeVal timeout;
 
+        /**
+         * Send a command to Redis.
+         *
+         * In a blocking context, it is identical to calling append_command,
+         * followed by get_reply. The function will return null if there was an
+         * error in performing the request, otherwise it will return the reply.
+         * In a non-blocking context, it is identical to calling only
+         * append_command and will always return null.
+         *
+         * @param format String to send to Redis, or a printf-style format
+         *               string, followed by arguments.
+         */
         [PrintfFunction]
         [CCode (cname = "redisCommand", has_target = false, has_type_id = false)]
-        public Reply redis_command(string format, ...);
+        public Reply command(string format, ...);
+        
+        [CCode (cname = "redisvCommand", has_target = false, has_type_id = false)]
+        public Reply v_command(string format, va_list ap);
+
+        /**
+         * Reconnect the given context using the saved information.
+         *
+         * This re-uses the exact same connect options as in the initial
+         * connection.
+         * host, ip (or path), timeout and bind address are reused,
+         * flags are used unmodified from the existing context.
+         *
+         * Returns RedisResponse.OK on successfull connect or RedisResponse.ERR
+         * otherwise.
+         */
+        [CCode (cname = "redisReconnect", has_target = false, has_type_id = false)]
+        public RedisResponse reconnect();
+        
+        [CCode (cname = "redisSetTimeout", has_target = false, has_type_id = false)]
+        public RedisResponse set_timeout(TimeVal tv);
+        
+        [CCode (cname = "redisEnableKeepAlive", has_target = false, has_type_id = false)]
+        public RedisResponse enable_keep_alive();
+        
+        [CCode (cname = "redisBufferRead", has_target = false, has_type_id = false)]
+        public RedisResponse buffer_read();
+        
+        [CCode (cname = "redisBufferWrite", has_target = false, has_type_id = false)]
+        public RedisResponse buffer_write(int* done);
+        
+        /**
+         * In a blocking context, this function first checks if there are
+         * unconsumed replies to return and returns one if so. Otherwise, it
+         * flushes the output buffer to the socket and reads until it has a
+         * reply. In a non-blocking context, it will return unconsumed replies
+         * until there are no more.
+         */
+        [CCode (cname = "redisGetReply", has_target = false, has_type_id = false)]
+        public RedisResponse get_reply(out Reply reply);
+
+        /**
+         * In a blocking context, this function first checks if there are
+         * unconsumed replies to return and returns one if so. Otherwise, it
+         * flushes the output buffer to the socket and reads until it has a
+         * reply. In a non-blocking context, it will return unconsumed replies
+         * until there are no more.
+         */
+        [CCode (cname = "redisGetReplyFromReader", has_target = false, has_type_id = false)]
+        public RedisResponse get_reply_from_reader(out Reply reply);
+
+        /**
+         * Write a formatted command to the output buffer. Use these functions
+         * in blocking mode to get a pipeline of commands.
+         */
+        [CCode (cname = "redisAppendFormattedCommand", has_target = false, has_type_id = false)]
+        public RedisResponse append_formatted_command(string cmd);
+
+        /**
+         * Write a command to the output buffer. Use these functions in blocking
+         * mode to get a pipeline of commands.
+         */
+        [CCode (cname = "redisvAppendCommand", has_target = false, has_type_id = false)]
+        public RedisResponse v_append_command(string cmd, va_list ap);
+
     }
 
     [Compact]
@@ -122,4 +229,34 @@ namespace Redis {
         [CCode (cname = "redisReaderGetReply", has_target = false, has_type_id = false)]
         public int get_reply(out Reply reply);
     }
+
+
+    [CCode (cname = "int", cprefix = "REDIS_", has_type_id = false)]
+    [Flags]
+    public enum Flags {
+        BLOCK,
+        CONNECTED,
+        DISCONNECTING,
+        FREEING,
+        IN_CALLBACK,
+        SUBSCRIBED,
+        MONITORING,
+        REUSEADDR
+    }
+
+    [CCode (cname = "int", cprefix = "REDIS_", has_type_id = false)]
+    public enum RedisResponse {
+        ERR,
+        OK
+    }
+
+    [CCode (cname = "int", cprefix = "REDIS_ERR_", has_type_id = false)]
+    public enum RedisError {
+        IO,
+        EOF,
+        PROTOCOL,
+        OOM,
+        OTHER
+    }
+
 }

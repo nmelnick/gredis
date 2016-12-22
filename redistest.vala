@@ -11,11 +11,11 @@ public int main(string[] args ) {
     stdout.printf("Connected\n");
 
     stdout.printf("Setting 'foo' to 'bar'\n");
-    var reply = context.redis_command("SET foo %s", "bar");
+    var reply = context.command("SET foo %s", "bar");
     stdout.printf("Result: %s\n", (string) reply.str);
 
     stdout.printf("Reading 'foo'\n");
-    reply = context.redis_command("GET %s", "foo");
+    reply = context.command("GET %s", "foo");
     stdout.printf("Result: %s\n", (string) reply.str);
     
     return 0;
