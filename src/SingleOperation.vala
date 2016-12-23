@@ -69,7 +69,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public int64 incrby(string key, int64 increment) throws RedisError {
-            var reply = oper("INCRBY %s %lld", key, count);
+            var reply = oper("INCRBY %s %lld", key, increment);
             return reply.integer;
         }
 
@@ -98,7 +98,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public int64 decrby(string key, int64 decrement) throws RedisError {
-            var reply = oper("DECRBY %s %lld", key, count);
+            var reply = oper("DECRBY %s %lld", key, decrement);
             return reply.integer;
         }
 
