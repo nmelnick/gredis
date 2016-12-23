@@ -20,7 +20,7 @@
   SOFTWARE.
 */
 
-[CCode (cheader_filename = "hiredis/hiredis.h")]
+[CCode (cheader_filename = "hiredis/hiredis.h,hiredis/read.h")]
 namespace Redis {
 
     /**
@@ -174,7 +174,7 @@ namespace Redis {
         public Reply[] element;
     }
 
-    [CCode (cheader_filename = "hiredis/read.h", cname = "redisReadTask", free_function = "", unref_function = "")]
+    [CCode (cname = "redisReadTask", free_function = "", unref_function = "")]
     public struct ReadTask {
         int type;
         int elements;
@@ -257,6 +257,16 @@ namespace Redis {
         PROTOCOL,
         OOM,
         OTHER
+    }
+
+    [CCode (cname = "int", cprefix = "REDIS_REPLY_", has_type_id = false)]
+    public enum ReplyType {
+        STRING,
+        ARRAY,
+        INTEGER,
+        NIL,
+        STATUS,
+        ERROR
     }
 
 }
