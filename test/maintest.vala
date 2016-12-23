@@ -62,5 +62,41 @@ public class MainTest {
             assert( c.set("appendtest", "success") == true );
             assert( c.append("appendtest", "ful") == 10 );
 		});
+
+
+		Test.add_func("/gredis/hash/setget", () => {
+			GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+			assert( c != null );
+            assert( c.hset("htest", "test", "success") == true );
+            assert( c.hget("htest", "test") == "success" );
+		});
+		Test.add_func("/gredis/hash/hsetnx", () => {
+			GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+			assert( c != null );
+            assert( c.hset("htest", "test", "success") == true );
+            assert( c.hsetnx("htest", "test", "success") == false );
+		});
+		Test.add_func("/gredis/hash/hexists", () => {
+			GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+			assert( c != null );
+            assert( c.hset("htest", "test", "success") == true );
+            assert( c.hexists("htest", "test") == true );
+            assert( c.hexists("htest", "testisnot") == false );
+		});
+		Test.add_func("/gredis/hash/hincrby", () => {
+			GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+			assert( c != null );
+            assert( c.hset("htest", "testintincrby", "0") == true );
+            assert( c.hincrby("htest", "testintincrby", 3) == 3 );
+            assert( c.hset("htest", "testintdecrby", "0") == true );
+            assert( c.hincrby("htest", "testintdecrby", -3) == -3 );
+		});
+		Test.add_func("/gredis/hash/hdel", () => {
+			GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+			assert( c != null );
+            assert( c.hset("htest", "deltest", "success") == true );
+            assert( c.hdel("htest", "deltest") == 1 );
+            assert( c.hexists("htest", "deltest") == false );
+		});
     }
 }
