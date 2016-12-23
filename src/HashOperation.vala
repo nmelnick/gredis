@@ -16,6 +16,8 @@ namespace GRedis {
                 return reply.integer.to_string();
             } else if (reply.type == Redis.ReplyType.STRING) {
                 return (string) reply.str;
+            } else if (reply.type == Redis.ReplyType.NIL) {
+                return null;
             } else {
                 throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
             }
