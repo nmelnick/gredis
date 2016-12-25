@@ -11,7 +11,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq build-essential cmake libglib2.0-dev libgee-0.8
          valac-0.22 gobject-introspection libgirepository1.0-dev libhiredis-dev
-         redis
+         redis-server
 
 before_script:
   - mkdir build
