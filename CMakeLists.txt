@@ -38,6 +38,7 @@ set (DEFAULT_VALA_OPTIONS
 
 SET( DEFAULT_PACKAGES
 	glib-2.0
+	gio-2.0
 	gmodule-2.0
 	gee-0.8
 	hiredis
