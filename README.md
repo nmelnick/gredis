@@ -20,6 +20,28 @@ Questions or comments, feel free to email, file an issue, or find me in #vala.
 * cmake ..
 * make && sudo make install
 
+## Basic Usage
+
+```
+public static int main(string[] args) {
+    try {
+        var c = new GRedis.Connection("127.0.0.1", 6379);
+        if ( c.set("foo", "bar") ) {
+            var value = c.get("foo");
+            stdout.printf("foo is '%s'\n", value);
+            c.del("foo");
+        }
+        if ( c.hset("foo", "baz", "bar") ) {
+            var value = c.hget("foo", "baz");
+            stdout.printf("foo:baz is '%s'\n", value);
+            c.hdel("foo", "baz");
+        }
+    } catch (Error e) {
+        stderr.printf("Oh noes, %s\n", e.message);
+    }
+}
+```
+
 ## What works?
 
 * A working, complete VAPI for libhiredis
@@ -40,10 +62,3 @@ Questions or comments, feel free to email, file an issue, or find me in #vala.
 
 * redis-cluster support. Not natively implemented in hiredis. There is
   a wrapper available, apparently, but have not looked into it yet
-
-## Operations
-
-* Get a Hiredis vapi operational for sync operations
-* Get async operations working
-* Provide a vala-ish API in front of the vapi
-* ???
