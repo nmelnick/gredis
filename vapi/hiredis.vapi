@@ -109,7 +109,7 @@ namespace Redis {
          * host, ip (or path), timeout and bind address are reused,
          * flags are used unmodified from the existing context.
          *
-         * Returns RedisResponse.OK on successfull connect or RedisResponse.ERR
+         * Returns RedisResponse.OK on successful connect or RedisResponse.ERR
          * otherwise.
          */
         [CCode (cname = "redisReconnect", has_target = false, has_type_id = false)]
