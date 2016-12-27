@@ -20,7 +20,7 @@
   SOFTWARE.
 */
 
-[CCode (cheader_filename = "hiredis/hiredis.h,hiredis/read.h")]
+[CCode (cheader_filename = "hiredis/hiredis.h,hiredis/read.h,hiredis/async.h,hiredis/adapters/glib.h")]
 namespace Redis {
 
     /**
@@ -230,6 +230,129 @@ namespace Redis {
         public int get_reply(out Reply reply);
     }
 
+    [CCode (has_target = false)]
+    public delegate void RedisDisconnectCallback(AsyncContext c, RedisResponse status);
+    [CCode (has_target = false)]
+    public delegate void RedisConnectCallback(AsyncContext c, RedisResponse status);
+    public delegate void RedisCallbackFunction(AsyncContext c, Reply a);
+
+    [SimpleType]
+    [CCode (cname = "redisCallback", free_function = "", unref_function = "")]
+    public struct RedisCallback {
+        public void* next;
+        RedisCallbackFunction fn;
+        void* privdata;
+    }
+
+    [SimpleType]
+    [CCode (cname = "redisCallbackList", free_function = "", unref_function = "")]
+    public struct RedisCallbackList {
+        RedisCallback head;
+        RedisCallback tail;
+    }
+
+    /**
+     * Connect to a Redis instance asynchronously.
+     *
+     * @param ip Hostname or IP address
+     * @param port Port number (defaults to 6379)
+     * @return Redis.AsyncContext instance
+     */
+    [CCode (cname = "redisAsyncConnect")]
+    public AsyncContext? async_connect(string ip, int port = 6379);
+
+    [CCode (cname = "redisConnectNonBlock")]
+    public Context? async_connect_nonblock(string ip, int port = 6379);
+
+    [CCode (cname = "redisAsyncConnectBind")]
+    public Context? async_connect_bind(string ip, int port, string source_addr);
+
+    [CCode (cname = "redisAsyncConnectBindWithReuse")]
+    public Context? async_connect_bind_with_reuse(string ip, int port, string source_addr);
+
+
+    public struct Ev {
+        public void* data;
+        public void* addRead;
+        public void* delRead;
+        public void* addWrite;
+        public void* delWrite;
+        public void* cleanup;
+    }
+
+    public struct Sub {
+        public RedisCallbackList invalid;
+        public void* channels;
+        public void* patterns;
+    }
+    
+    /**
+     * Redis async connection context for performing operations.
+     */
+    [Compact]
+    [CCode (cname = "redisAsyncContext", free_function = "redisAsyncFree")]
+    public class AsyncContext {
+        public Context c;
+        public int err;
+        public char errstr[128];
+        public void* data;
+        public Ev ev;
+        public RedisDisconnectCallback onDisconnect;
+        public RedisConnectCallback onConnect;
+        public RedisCallbackList replies;
+        public Sub sub;
+
+        [CCode (cname = "redisAsyncSetConnectCallback", has_target = false, has_type_id = false)]
+        public RedisResponse set_connect_callback(RedisConnectCallback fn);
+        
+        [CCode (cname = "redisAsyncSetDisconnectCallback", has_target = false, has_type_id = false)]
+        public RedisResponse set_disconnect_callback(RedisDisconnectCallback fn);
+
+        [CCode (cname = "redisAsyncDisconnect", has_target = false, has_type_id = false)]
+        public void disconnect();
+
+        [CCode (cname = "redisAsyncHandleRead", has_target = false, has_type_id = false)]
+        public void handle_read();
+
+        [CCode (cname = "redisAsyncHandleWrite", has_target = false, has_type_id = false)]
+        public void handle_write();
+
+        /**
+         * Send a command to Redis.
+         *
+         * In a blocking context, it is identical to calling append_command,
+         * followed by get_reply. The function will return null if there was an
+         * error in performing the request, otherwise it will return the reply.
+         * In a non-blocking context, it is identical to calling only
+         * append_command and will always return null.
+         *
+         * @param fn     Callback function
+         * @param format String to send to Redis, or a printf-style format
+         *               string, followed by arguments.
+         */
+        [PrintfFunction]
+        [CCode (cname = "redisAsyncCommand", has_target = false, has_type_id = false)]
+        public Reply command(RedisCallbackFunction fn, string format, ...);
+        
+        [CCode (cname = "redisvAsyncCommand", has_target = false, has_type_id = false)]
+        public Reply v_command(RedisCallbackFunction fn, string format, va_list ap);
+
+    }
+
+    [CCode (cname = "RedisSource", lower_case_cprefix = "redis_source_", free_function = "redis_source_finalize")]
+    public class Source : GLib.Source {
+
+        [CCode (cname="redis_source_new")]
+        public Source(AsyncContext ac);
+
+        // public void add_read();
+        // public void del_read();
+        // public void add_write();
+        // public void del_write();
+        public bool prepare(int timeout_);
+        public bool check();
+        public bool dispatch(GLib.SourceFunc callback, void *userdata);
+    }
 
     [CCode (cname = "int", cprefix = "REDIS_", has_type_id = false)]
     [Flags]
