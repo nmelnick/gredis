@@ -1,7 +1,7 @@
 namespace GRedis {
     public interface HashOperation : Operation {
         public bool hset(string key, string field, string value) throws RedisError {
-            var reply = oper("HSET %s %s %s", key, field, value);
+            oper("HSET %s %s %s", key, field, value);
             return true;
         }
 

@@ -9,7 +9,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool @set(string key, string value) throws RedisError {
-            var reply = oper("SET %s %s", key, value);
+            oper("SET %s %s", key, value);
             return true;
         }
 
