@@ -5,5 +5,6 @@
 void main (string[] args) {
 	Test.init( ref args );
 	MainTest.add_tests();
+	AsyncTest.add_tests();
 	Test.run();
 }

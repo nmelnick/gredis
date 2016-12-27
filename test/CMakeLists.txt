@@ -5,6 +5,7 @@ include(ValaPrecompile)
 vala_precompile(VALA_C 
 	test-runner.vala
 	maintest.vala
+	asynctest.vala
 PACKAGES
 	${DEFAULT_PACKAGES}
 	posix
