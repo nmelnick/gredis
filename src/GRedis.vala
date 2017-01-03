@@ -15,7 +15,7 @@ namespace GRedis {
         ERROR
     }
 
-    public class Connection : Object, Operation, SingleOperation, HashOperation {
+    public class Connection : Object, Operation, SingleOperation, HashOperation, ListOperation {
         private Redis.Context _context;
         public Redis.Context context { get { return _context; } }
         public static LogHandler logger { get; set; default = new LogHandler(); }

@@ -5,5 +5,7 @@
 void main (string[] args) {
 	Test.init( ref args );
 	MainTest.add_tests();
+	HashTest.add_tests();
+	ListTest.add_tests();
 	Test.run();
 }
