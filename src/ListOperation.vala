@@ -66,6 +66,38 @@ namespace GRedis {
         }
 
         /**
+         * Removes and returns the first element of the list stored at key.
+         */
+        public string? lpop(string key) throws RedisError {
+            var reply = oper("LPOP %s", key);
+            if (reply.type == Redis.ReplyType.INTEGER) {
+                return reply.integer.to_string();
+            } else if (reply.type == Redis.ReplyType.STRING) {
+                return (string) reply.str;
+            } else if (reply.type == Redis.ReplyType.NIL) {
+                return null;
+            } else {
+                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+            }
+        }
+
+        /**
+         * Removes and returns the last element of the list stored at key.
+         */
+        public string? rpop(string key) throws RedisError {
+            var reply = oper("RPOP %s", key);
+            if (reply.type == Redis.ReplyType.INTEGER) {
+                return reply.integer.to_string();
+            } else if (reply.type == Redis.ReplyType.STRING) {
+                return (string) reply.str;
+            } else if (reply.type == Redis.ReplyType.NIL) {
+                return null;
+            } else {
+                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+            }
+        }
+
+        /**
          * Insert the specified value at the head of the list stored at key. If
          * key does not exist, it is created as empty list before performing the
          * push operations. When key holds a value that is not a list, an error
@@ -89,6 +121,33 @@ namespace GRedis {
          */
         public int64 lpushx(string key, string value) throws RedisError {
             var reply = oper("LPUSHX %s %s", key, value);
+            return reply.integer;
+        }
+
+        /**
+         * Insert the specified value at the tail of the list stored at key. If
+         * key does not exist, it is created as empty list before performing the
+         * push operations. When key holds a value that is not a list, an error
+         * is returned.
+         *
+         * @param key List key
+         * @param value Value to insert
+         */
+        public int64 rpush(string key, string value) throws RedisError {
+            var reply = oper("RPUSH %s %s", key, value);
+            return reply.integer;
+        }
+
+        /**
+         * Insert the specified value at the tail of the list stored at key,
+         * only if key already exists and holds a list. In contrary to LPUSH, no
+         * operation will be performed when key does not yet exist.
+         *
+         * @param key List key
+         * @param value Value to insert
+         */
+        public int64 rpushx(string key, string value) throws RedisError {
+            var reply = oper("RPUSHX %s %s", key, value);
             return reply.integer;
         }
 
