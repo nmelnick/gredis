@@ -41,6 +41,8 @@ namespace GRedis {
                 if ( ( (string) reply.str ) == "OK" ) {
                     return true;
                 }
+            } else if (reply.type == Redis.ReplyType.ERROR) {
+                throw new RedisError.GENERAL( (string) reply.str );
             } else {
                 throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
             }
@@ -87,7 +89,7 @@ namespace GRedis {
          * RedisError on error, otherwise, return the array response as a Gee
          * ArrayList.
          */
-        public Gee.ArrayList<string,string> oper_arraylist(string format, ...) throws RedisError {
+        public Gee.ArrayList<string> oper_arraylist(string format, ...) throws RedisError {
             var list = va_list();
             var reply = voper( format, list );
             if (reply.type != Redis.ReplyType.ARRAY) {

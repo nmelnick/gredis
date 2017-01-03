@@ -1,6 +1,7 @@
 namespace GRedis {
     public errordomain ConnectionError {
         CONNECT_ERROR,
+        AUTH_ERROR,
         LIBRARY_ERROR
     }
 
@@ -27,7 +28,7 @@ namespace GRedis {
          * @param port Port number (defaults to 6379)
          * @throw ConnectionError
          */
-        public Connection( string host, int port = 6379 ) throws ConnectionError {
+        public Connection( string host, int port = 6379, string? password = null ) throws ConnectionError {
             _context = Redis.connect(host, port);
             if (context == null || context.err > 0) {
                 if (context != null) {
@@ -35,6 +36,9 @@ namespace GRedis {
                 } else {
                     throw new ConnectionError.LIBRARY_ERROR("Unable to allocate Redis context");
                 }
+            }
+            if ( password != null ) {
+                auth(password);
             }
         }
 
@@ -48,6 +52,14 @@ namespace GRedis {
                 return true;
             }
             return false;
+        }
+
+        public void auth( string password ) throws ConnectionError {
+            try {
+                oper_simple("AUTH %s", password);
+            } catch (RedisError e) {
+                throw new ConnectionError.AUTH_ERROR(e.message);
+            }
         }
     }
 }
