@@ -6,6 +6,7 @@ vala_precompile(GREDIS_VALA_C
 	ListOperation.vala
 	LogHandler.vala
 	Operation.vala
+	RedisMap.vala
 	SingleOperation.vala
 PACKAGES
 	${DEFAULT_PACKAGES}

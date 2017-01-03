@@ -7,6 +7,7 @@ vala_precompile(VALA_C
 	maintest.vala
 	hashtest.vala
 	listtest.vala
+	redismaptest.vala
 PACKAGES
 	${DEFAULT_PACKAGES}
 	posix
