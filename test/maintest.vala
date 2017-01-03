@@ -4,8 +4,8 @@ public class MainTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.set("test", "success") == true );
-				assert( c.get("test") == "success" );
+				assert( c.set("grtest", "success") == true );
+				assert( c.get("grtest") == "success" );
 			} catch (Error e) {
 				assert_not_reached();
 			}
@@ -14,8 +14,8 @@ public class MainTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.set("test", "success") == true );
-				assert( c.setnx("test", "success") == false );
+				assert( c.set("grtest", "success") == true );
+				assert( c.setnx("grtest", "success") == false );
 			} catch (Error e) {
 				assert_not_reached();
 			}
@@ -24,8 +24,8 @@ public class MainTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.set("test", "success") == true );
-				assert( c.exists("test") == true );
+				assert( c.set("grtest", "success") == true );
+				assert( c.exists("grtest") == true );
 				assert( c.exists("testisnot") == false );
 			} catch (Error e) {
 				assert_not_reached();

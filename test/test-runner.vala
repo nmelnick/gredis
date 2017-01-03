@@ -8,5 +8,6 @@ void main (string[] args) {
 	HashTest.add_tests();
 	ListTest.add_tests();
 	RedisMapTest.add_tests();
+	CleanupTest.add_tests();
 	Test.run();
 }
