@@ -141,15 +141,7 @@ namespace GRedis {
          * @param end End index
          */
         public Gee.List<string> lrange(string key, int64 start, int64 end) throws RedisError {
-            var reply = oper("LRANGE %s %lld %lld", key, start, end);
-            if (reply.type != Redis.ReplyType.ARRAY) {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
-            var array = new ArrayList<string>();
-            for ( var i = 0; i < reply.element.length; i++ ) {
-                array.add( (string) reply.element[i].str );
-            }
-            return array.read_only_view;
+            return oper_arraylist("LRANGE %s %lld %lld", key, start, end).read_only_view;
         }
 
         /**

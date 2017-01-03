@@ -72,15 +72,7 @@ namespace GRedis {
          * @param key Hash key
          */
         public Gee.List<string> hkeys(string key) throws RedisError {
-            var reply = oper("HKEYS %s", key);
-            if (reply.type != Redis.ReplyType.ARRAY) {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
-            var array = new Gee.ArrayList<string>();
-            for ( var i = 0; i < reply.element.length; i++ ) {
-                array.add( (string) reply.element[i].str );
-            }
-            return array.read_only_view;
+            return oper_arraylist("HKEYS %s", key).read_only_view;
         }
 
         /**
@@ -89,15 +81,7 @@ namespace GRedis {
          * @param key Hash key
          */
         public Gee.List<string> hvals(string key) throws RedisError {
-            var reply = oper("HVALS %s", key);
-            if (reply.type != Redis.ReplyType.ARRAY) {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
-            var array = new Gee.ArrayList<string>();
-            for ( var i = 0; i < reply.element.length; i++ ) {
-                array.add( (string) reply.element[i].str );
-            }
-            return array.read_only_view;
+            return oper_arraylist("HVALS %s", key).read_only_view;
         }
 
         /**
@@ -108,15 +92,7 @@ namespace GRedis {
          * @param key Hash key
          */
         public Gee.List<string> hgetall(string key) throws RedisError {
-            var reply = oper("HGETALL %s", key);
-            if (reply.type != Redis.ReplyType.ARRAY) {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
-            var array = new Gee.ArrayList<string>();
-            for ( var i = 0; i < reply.element.length; i++ ) {
-                array.add( (string) reply.element[i].str );
-            }
-            return array.read_only_view;
+            return oper_arraylist("HGETALL %s", key).read_only_view;
         }
 
         /**

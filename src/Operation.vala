@@ -81,5 +81,23 @@ namespace GRedis {
                 throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
             }
         }
+
+        /**
+         * Run a hiredis operation with the given format and values, throw a
+         * RedisError on error, otherwise, return the array response as a Gee
+         * ArrayList.
+         */
+        public Gee.ArrayList<string,string> oper_arraylist(string format, ...) throws RedisError {
+            var list = va_list();
+            var reply = voper( format, list );
+            if (reply.type != Redis.ReplyType.ARRAY) {
+                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+            }
+            var array = new Gee.ArrayList<string>();
+            for ( var i = 0; i < reply.element.length; i++ ) {
+                array.add( (string) reply.element[i].str );
+            }
+            return array;
+        }
     }
 }
