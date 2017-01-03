@@ -54,6 +54,10 @@ public static int main(string[] args) {
 
 ## What is still in progress?
 
+* Geo operations
+* Bit operations
+* Config operations
+* Sorted set operations
 * Any other operations
 * Async functionality (in the vapi, not in gredis)
 * Mock unit tests
