@@ -16,10 +16,24 @@ namespace GRedis {
         ERROR
     }
 
+    /**
+     * Core connection class for GRedis. To open a connection to a Redis server,
+     * create a new instance with a host and a port.
+     *
+     * This uses composition to add Redis methods for use in a Connection. For
+     * documentation on each method, look in the various Operation classes for
+     * the type of action required. Operations on root keys are SingleOperation,
+     * hash in HashOperation, list in ListOperation.
+     *
+     * One may access the underlying Hiredis context in the context property.
+     */
     public class Connection : Object, Operation, SingleOperation, HashOperation, ListOperation {
         private Redis.Context _context;
+        /**
+         * Underlying Hiredis context.
+         */
         public Redis.Context context { get { return _context; } }
-        public static LogHandler logger { get; set; default = new LogHandler(); }
+        private static LogHandler logger { get; set; default = new LogHandler(); }
 
         /**
          * Initialize a new connection to Redis.
