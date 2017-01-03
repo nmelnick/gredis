@@ -172,5 +172,19 @@ namespace GRedis {
             var reply = oper("EXPIRE %s %lld", key, seconds);
             return ( reply.integer == 1 ? true : false );
         }
+
+        /**
+         * EXPIREAT has the same effect and semantic as EXPIRE, but instead of
+         * specifying the number of seconds representing the TTL (time to live),
+         * it takes an absolute Unix timestamp (seconds since January 1, 1970).
+         * A timestamp in the past will delete the key immediately.
+         * @param key Key
+         * @param timestamp Unix timestamp, in seconds, for when to expire
+         * @throw RedisError
+         */
+        public bool expireat(string key, int64 timestamp) throws RedisError {
+            var reply = oper("EXPIREAT %s %lld", key, timestamp);
+            return ( reply.integer == 1 ? true : false );
+        }
     }
 }
