@@ -159,5 +159,18 @@ namespace GRedis {
             var reply = oper("APPEND %s %s", key, value);
             return reply.integer;
         }
+
+        /**
+         * Set a timeout on key. After the timeout has expired, the key will
+         * automatically be deleted. A key with an associated timeout is often
+         * said to be volatile in Redis terminology.
+         * @param key Key
+         * @param seconds Number of seconds until expiration
+         * @throw RedisError
+         */
+        public bool expire(string key, int64 seconds) throws RedisError {
+            var reply = oper("EXPIRE %s %lld", key, seconds);
+            return ( reply.integer == 1 ? true : false );
+        }
     }
 }
