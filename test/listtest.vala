@@ -20,6 +20,26 @@ public class ListTest {
 				assert_not_reached();
 			}
 		});
+		Test.add_func("/gredis/live/list/rpush", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+                c.del("rpushlist");
+                assert( c.rpush( "rpushlist", "val" ) == 1 );
+                assert( c.lindex( "rpushlist", 0 ) == "val" );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
+		Test.add_func("/gredis/live/list/rpushx", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+                assert( c.rpushx( "rpushxlist", "val" ) == 0 );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
 		Test.add_func("/gredis/live/list/llen", () => {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
@@ -92,6 +112,34 @@ public class ListTest {
                 assert( c.llen("ltrimlist") == 3 );
                 assert( c.ltrim("ltrimlist", 0, 0) == true );
                 assert( c.llen("ltrimlist") == 1 );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
+		Test.add_func("/gredis/live/list/lpop", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+                c.del("lpoplist");
+                assert( c.lpush( "lpoplist", "val" ) == 1 );
+                assert( c.lpush( "lpoplist", "val2" ) == 2 );
+                assert( c.lpush( "lpoplist", "val3" ) == 3 );
+                assert( c.llen("lpoplist") == 3 );
+                assert( c.lpop("lpoplist") == "val3" );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
+		Test.add_func("/gredis/live/list/rpop", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+                c.del("rpoplist");
+                assert( c.lpush( "rpoplist", "val" ) == 1 );
+                assert( c.lpush( "rpoplist", "val2" ) == 2 );
+                assert( c.lpush( "rpoplist", "val3" ) == 3 );
+                assert( c.llen("rpoplist") == 3 );
+                assert( c.rpop("rpoplist") == "val" );
 			} catch (Error e) {
 				assert_not_reached();
 			}
