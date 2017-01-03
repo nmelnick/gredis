@@ -4,7 +4,8 @@ public class HashTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.hset("htest", "test", "success") == true );
+				c.hdel("htest", "test");
+				assert( c.hset("htest", "test", "success") == GRedis.FieldStatus.SUCCESS_VALUE_SET );
 				assert( c.hget("htest", "test") == "success" );
 			} catch (Error e) {
 				assert_not_reached();
@@ -14,7 +15,8 @@ public class HashTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.hset("htest", "test", "success") == true );
+				c.hdel("htest", "test");
+				assert( c.hset("htest", "test", "success") == GRedis.FieldStatus.SUCCESS_VALUE_SET );
 				assert( c.hsetnx("htest", "test", "success") == false );
 			} catch (Error e) {
 				assert_not_reached();
@@ -24,7 +26,8 @@ public class HashTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.hset("htest", "test", "success") == true );
+				c.hdel("htest", "test");
+				assert( c.hset("htest", "test", "success") == GRedis.FieldStatus.SUCCESS_VALUE_SET );
 				assert( c.hexists("htest", "test") == true );
 				assert( c.hexists("htest", "testisnot") == false );
 			} catch (Error e) {
@@ -35,9 +38,9 @@ public class HashTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.hset("htest", "testintincrby", "0") == true );
+				c.hset("htest", "testintincrby", "0");
 				assert( c.hincrby("htest", "testintincrby", 3) == 3 );
-				assert( c.hset("htest", "testintdecrby", "0") == true );
+				c.hset("htest", "testintdecrby", "0");
 				assert( c.hincrby("htest", "testintdecrby", -3) == -3 );
 			} catch (Error e) {
 				assert_not_reached();
@@ -47,7 +50,7 @@ public class HashTest {
 			try {
 				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
 				assert( c != null );
-				assert( c.hset("htest", "deltest", "success") == true );
+				c.hset("htest", "deltest", "success");
 				assert( c.hdel("htest", "deltest") == 1 );
 				assert( c.hexists("htest", "deltest") == false );
 			} catch (Error e) {

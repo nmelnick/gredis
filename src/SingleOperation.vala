@@ -1,4 +1,8 @@
 namespace GRedis {
+    /**
+     * Operations on single keys, which may also be the master keys for a Hash
+     * or a List.
+     */
     public interface SingleOperation : Operation {
 
         /**
@@ -9,8 +13,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool @set(string key, string value) throws RedisError {
-            oper("SET %s %s", key, value);
-            return true;
+            return oper_simple("SET %s %s", key, value);
         }
 
         /**
@@ -22,8 +25,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool setnx(string key, string value) throws RedisError {
-            var reply = oper("SETNX %s %s", key, value);
-            return ( reply.integer == 1 ? true : false );
+            return oper_intbool("SETNX %s %s", key, value);
         }
 
         /**
@@ -35,8 +37,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool setex(string key, int64 seconds, string value) throws RedisError {
-            oper("SETEX %s %lld %s", key, seconds, value);
-            return true;
+            return oper_simple("SETEX %s %lld %s", key, seconds, value);
         }
 
         /**
@@ -45,16 +46,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public string? @get(string key) throws RedisError {
-            var reply = oper("GET %s", key);
-            if (reply.type == Redis.ReplyType.INTEGER) {
-                return reply.integer.to_string();
-            } else if (reply.type == Redis.ReplyType.STRING) {
-                return (string) reply.str;
-            } else if (reply.type == Redis.ReplyType.NIL) {
-                return null;
-            } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
+            return oper_string("GET %s", key);
         }
 
         /**
@@ -131,8 +123,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool exists(string key) throws RedisError {
-            var reply = oper("EXISTS %s", key);
-            return ( reply.integer == 1 ? true : false );
+            return oper_intbool("EXISTS %s", key);
         }
 
         /**
@@ -169,8 +160,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool expire(string key, int64 seconds) throws RedisError {
-            var reply = oper("EXPIRE %s %lld", key, seconds);
-            return ( reply.integer == 1 ? true : false );
+            return oper_intbool("EXPIRE %s %lld", key, seconds);
         }
 
         /**
@@ -183,8 +173,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool expireat(string key, int64 timestamp) throws RedisError {
-            var reply = oper("EXPIREAT %s %lld", key, timestamp);
-            return ( reply.integer == 1 ? true : false );
+            return oper_intbool("EXPIREAT %s %lld", key, timestamp);
         }
 
         /**
@@ -198,7 +187,7 @@ namespace GRedis {
          * @throw RedisError
          */
         public bool rename(string key, string new_key) throws RedisError {
-            return oper_simple("EXPIREAT %s %lld", key, timestamp);
+            return oper_simple("RENAME %s %s", key, new_key);
         }
     }
 }

@@ -1,6 +1,9 @@
 using Gee;
 
 namespace GRedis {
+    /**
+     * For the linsert/LINSERT command, this enum provides BEFORE or AFTER.
+     */
     public enum InsertPivot {
         BEFORE,
         AFTER;
@@ -17,6 +20,9 @@ namespace GRedis {
         }
     }
 
+    /**
+     * Operations on a List.
+     */
     public interface ListOperation : Operation {
         /**
          * Returns the element at index index in the list stored at key. The
@@ -26,16 +32,7 @@ namespace GRedis {
          * means the penultimate and so forth.
          */
         public string? lindex(string key, int64 index) throws RedisError {
-            var reply = oper("LINDEX %s %lld", key, index);
-            if (reply.type == Redis.ReplyType.INTEGER) {
-                return reply.integer.to_string();
-            } else if (reply.type == Redis.ReplyType.STRING) {
-                return (string) reply.str;
-            } else if (reply.type == Redis.ReplyType.NIL) {
-                return null;
-            } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
+            return oper_string("LINDEX %s %lld", key, index);
         }
 
         /**
@@ -69,32 +66,14 @@ namespace GRedis {
          * Removes and returns the first element of the list stored at key.
          */
         public string? lpop(string key) throws RedisError {
-            var reply = oper("LPOP %s", key);
-            if (reply.type == Redis.ReplyType.INTEGER) {
-                return reply.integer.to_string();
-            } else if (reply.type == Redis.ReplyType.STRING) {
-                return (string) reply.str;
-            } else if (reply.type == Redis.ReplyType.NIL) {
-                return null;
-            } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
+            return oper_string("LPOP %s", key);
         }
 
         /**
          * Removes and returns the last element of the list stored at key.
          */
         public string? rpop(string key) throws RedisError {
-            var reply = oper("RPOP %s", key);
-            if (reply.type == Redis.ReplyType.INTEGER) {
-                return reply.integer.to_string();
-            } else if (reply.type == Redis.ReplyType.STRING) {
-                return (string) reply.str;
-            } else if (reply.type == Redis.ReplyType.NIL) {
-                return null;
-            } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
+            return oper_string("RPOP %s", key);
         }
 
         /**
@@ -204,8 +183,7 @@ namespace GRedis {
          * @param value Value to set
          */
         public bool lset(string key, int64 index, string value) throws RedisError {
-            oper("LSET %s %lld %s", key, index, value);
-            return true;
+            return oper_simple("LSET %s %lld %s", key, index, value);
         }
 
         /**
@@ -228,8 +206,7 @@ namespace GRedis {
          * @param end End index
          */
         public bool ltrim(string key, int64 start, int64 end) throws RedisError {
-            oper("LTRIM %s %lld %lld", key, start, end);
-            return true;
+            return oper_simple("LTRIM %s %lld %lld", key, start, end);
         }
     }
 }

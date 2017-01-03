@@ -7,6 +7,7 @@ public class MainTest {
 				assert( c.set("grtest", "success") == true );
 				assert( c.get("grtest") == "success" );
 			} catch (Error e) {
+				stdout.printf(e.message);
 				assert_not_reached();
 			}
 		});

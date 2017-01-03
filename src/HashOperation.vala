@@ -1,26 +1,36 @@
 namespace GRedis {
+    /**
+     * Status on an hset.
+     */
+    public enum FieldStatus {
+        /**
+         * Value was set successfully on a new field.
+         */
+        SUCCESS_VALUE_SET,
+        /**
+         * Value was updated successfully on an existing field.
+         */
+        SUCCESS_VALUE_UPDATED,
+        /**
+         * Value was not set.
+         */
+        FAILED
+    }
+
+    /**
+     * Operations on a Hash.
+     */
     public interface HashOperation : Operation {
-        public bool hset(string key, string field, string value) throws RedisError {
-            oper("HSET %s %s %s", key, field, value);
-            return true;
+        public FieldStatus hset(string key, string field, string value) throws RedisError {
+            return ( oper_intbool("HSET %s %s %s", key, field, value) ? FieldStatus.SUCCESS_VALUE_SET : FieldStatus.SUCCESS_VALUE_UPDATED );
         }
 
         public bool hsetnx(string key, string field, string value) throws RedisError {
-            var reply = oper("HSETNX %s %s %s", key, field, value);
-            return ( reply.integer == 1 ? true : false );
+            return oper_intbool("HSETNX %s %s %s", key, field, value);
         }
 
         public string? hget(string key, string field) throws RedisError {
-            var reply = oper("HGET %s %s", key, field);
-            if (reply.type == Redis.ReplyType.INTEGER) {
-                return reply.integer.to_string();
-            } else if (reply.type == Redis.ReplyType.STRING) {
-                return (string) reply.str;
-            } else if (reply.type == Redis.ReplyType.NIL) {
-                return null;
-            } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
-            }
+            return oper_string("HGET %s %s", key, field);
         }
 
         public int64 hdel(string key, string field) throws RedisError {
