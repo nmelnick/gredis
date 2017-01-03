@@ -7,7 +7,7 @@ public class MainTest {
 				assert( c.set("grtest", "success") == true );
 				assert( c.get("grtest") == "success" );
 			} catch (Error e) {
-				stdout.printf(e.message);
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -18,6 +18,7 @@ public class MainTest {
 				assert( c.set("grtest", "success") == true );
 				assert( c.setnx("grtest", "success") == false );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -29,6 +30,7 @@ public class MainTest {
 				assert( c.exists("grtest") == true );
 				assert( c.exists("testisnot") == false );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -39,6 +41,7 @@ public class MainTest {
 				assert( c.set("testintincr", "0") == true );
 				assert( c.incr("testintincr") == 1 );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -49,6 +52,7 @@ public class MainTest {
 				assert( c.set("testintincrby", "0") == true );
 				assert( c.incrby("testintincrby", 3) == 3 );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -59,6 +63,7 @@ public class MainTest {
 				assert( c.set("testintdecr", "0") == true );
 				assert( c.decr("testintdecr") == -1 );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -69,6 +74,7 @@ public class MainTest {
 				assert( c.set("testintdecrby", "0") == true );
 				assert( c.decrby("testintdecrby", 3) == -3 );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -80,6 +86,7 @@ public class MainTest {
 				assert( c.del("deltest") == 1 );
 				assert( c.exists("deltest") == false );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -90,6 +97,7 @@ public class MainTest {
 				assert( c.set("strlentest", "success") == true );
 				assert( c.strlen("strlentest") == 7 );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});
@@ -100,6 +108,20 @@ public class MainTest {
 				assert( c.set("appendtest", "success") == true );
 				assert( c.append("appendtest", "ful") == 10 );
 			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
+				assert_not_reached();
+			}
+		});
+		Test.add_func("/gredis/live/single/type", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+				assert( c.set("typetest", "success") == true );
+				assert( c.type("typetest") == "string" );
+				c.hset("typehtest", "foo", "success");
+				assert( c.type("typehtest") == "hash" );
+			} catch (Error e) {
+				stdout.printf("%s\n", e.message);
 				assert_not_reached();
 			}
 		});

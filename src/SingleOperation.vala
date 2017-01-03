@@ -189,5 +189,54 @@ namespace GRedis {
         public bool rename(string key, string new_key) throws RedisError {
             return oper_simple("RENAME %s %s", key, new_key);
         }
+
+        /**
+         * Remove the existing timeout on key, turning the key from volatile (a
+         * key with an expire set) to persistent (a key that will never expire
+         * as no timeout is associated).
+         * @param key Key
+         * @throw RedisError
+         */
+        public bool persist(string key) throws RedisError {
+            return oper_intbool("PERSIST %s", key);
+        }
+
+        /**
+         * Returns the remaining time to live of a key that has a timeout. This
+         * introspection capability allows a Redis client to check how many
+         * seconds a given key will continue to be part of the dataset.
+         * @param key Key
+         * @throw RedisError
+         */
+        public int64 ttl(string key) throws RedisError {
+            var reply = oper("TTL %s", key);
+            return reply.integer;
+        }
+
+        /**
+         * Returns the string representation of the type of the value stored at
+         * key. The different types that can be returned are: string, list, set,
+         * zset and hash.
+         * @param key Key
+         * @throw RedisError
+         */
+        public string? type(string key) throws RedisError {
+            return oper_string("TYPE %s", key);
+        }
+
+        /**
+         * This command is very similar to DEL: it removes the specified keys.
+         * Just like DEL a key is ignored if it does not exist. However the
+         * command performs the actual memory reclaiming in a different thread,
+         * so it is not blocking, while DEL is. This is where the command name
+         * comes from: the command just unlinks the keys from the keyspace. The
+         * actual removal will happen later asynchronously.
+         * @param key Key
+         * @throw RedisError
+         */
+        public int64 unlink(string key) throws RedisError {
+            var reply = oper("UNLINK %s", key);
+            return reply.integer;
+        }
     }
 }

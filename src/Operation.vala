@@ -44,7 +44,7 @@ namespace GRedis {
             } else if (reply.type == Redis.ReplyType.ERROR) {
                 throw new RedisError.GENERAL( (string) reply.str );
             } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+                throw new RedisError.UNHANDLED("Unknown reply type %d: %s".printf(reply.type, (string) reply.str));
             }
             return false;
         }
@@ -60,7 +60,7 @@ namespace GRedis {
             if (reply.type == Redis.ReplyType.INTEGER) {
                 return ( reply.integer == 1 ? true : false );
             } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+                throw new RedisError.UNHANDLED("Unknown reply type %d: %s".printf(reply.type, (string) reply.str));
             }
             return false;
         }
@@ -77,10 +77,12 @@ namespace GRedis {
                 return reply.integer.to_string();
             } else if (reply.type == Redis.ReplyType.STRING) {
                 return (string) reply.str;
+            } else if (reply.type == Redis.ReplyType.STATUS) {
+                return (string) reply.str;
             } else if (reply.type == Redis.ReplyType.NIL) {
                 return null;
             } else {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+                throw new RedisError.UNHANDLED("Unknown reply type %d: %s".printf(reply.type, (string) reply.str));
             }
         }
 
@@ -93,7 +95,7 @@ namespace GRedis {
             var list = va_list();
             var reply = voper( format, list );
             if (reply.type != Redis.ReplyType.ARRAY) {
-                throw new RedisError.UNHANDLED("Unknown reply type %d".printf(reply.type));
+                throw new RedisError.UNHANDLED("Unknown reply type %d: %s".printf(reply.type, (string) reply.str));
             }
             var array = new Gee.ArrayList<string>();
             for ( var i = 0; i < reply.element.length; i++ ) {
