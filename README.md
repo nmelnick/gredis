@@ -49,11 +49,11 @@ public static int main(string[] args) {
   like other Redis libraries
   * Supports Single operations (set, get, ...)
   * Supports Hash operations (hset, hget, ...)
+  * Supports List operations (lindex, lpush, rpop, ...)
 * Live unit tests
 
 ## What is still in progress?
 
-* List operations (lget, lset, ...)
 * Any other operations
 * Async functionality (in the vapi, not in gredis)
 * Mock unit tests
