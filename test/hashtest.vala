@@ -57,5 +57,19 @@ public class HashTest {
 				assert_not_reached();
 			}
 		});
+		Test.add_func("/gredis/live/hash/hgetall", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+				c.hset("hgetalltest", "foo", "bar");
+				c.hset("hgetalltest", "baz", "bee");
+				var hm = c.hgetall_hm("hgetalltest");
+				assert( hm != null );
+				assert( hm.get("foo") == "bar" );
+				assert( hm.get("baz") == "bee" );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
     }
 }
