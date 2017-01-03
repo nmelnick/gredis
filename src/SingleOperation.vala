@@ -27,6 +27,19 @@ namespace GRedis {
         }
 
         /**
+         * Set key to hold the string value and set key to timeout after a given
+         * number of seconds.
+         * @param key Key
+         * @param seconds Seconds until expiration
+         * @param value Value to set
+         * @throw RedisError
+         */
+        public bool setex(string key, int64 seconds, string value) throws RedisError {
+            oper("SETEX %s %lld %s", key, seconds, value);
+            return true;
+        }
+
+        /**
          * Get the value of key. If the key does not exist, null is returned.
          * @param key Key
          * @throw RedisError
