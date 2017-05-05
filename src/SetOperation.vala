@@ -13,7 +13,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SADD %s %s".printf(key, member);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
                
             var reply = oper(operation);
@@ -35,7 +35,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SDIFF %s".printf(key);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             return oper_set(operation);
         }
@@ -47,7 +47,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SDIFFSTORE %s %s".printf(destination, key);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             var reply = oper(operation);
             return reply.integer;
@@ -60,7 +60,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SINTER %s".printf(key);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             return oper_set(operation);
         }
@@ -72,7 +72,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SINTERSTORE %s %s".printf(destination, key);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             var reply = oper(operation);
             return reply.integer;
@@ -122,7 +122,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SREM %s %s".printf(key, member);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             var reply = oper(operation);
             return reply.integer;
@@ -135,7 +135,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SUNION %s".printf(key);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             return oper_set(operation);
         }
@@ -147,7 +147,7 @@ namespace GRedis {
             var list = va_list();
             string operation = "SUNIONSTORE %s %s".printf(destination, key);
             for (string? str = list.arg<string?>(); str != null; str = list.arg<string?>()){
-                operation += " "+str;
+                operation += " " + str;
             }
             var reply = oper(operation);
             return reply.integer;
