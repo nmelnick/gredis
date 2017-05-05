@@ -25,20 +25,21 @@ Questions or comments, feel free to email, file an issue, or find me in #vala.
 ```
 public static int main(string[] args) {
     try {
-        var c = new GRedis.Connection("127.0.0.1", 6379);
-        if ( c.set("foo", "bar") ) {
-            var value = c.get("foo");
+        var con = new GRedis.Connection("127.0.0.1", 6379);
+        if ( con.set("foo", "bar") ) {
+            var value = con.get("foo");
             stdout.printf("foo is '%s'\n", value);
-            c.del("foo");
+            con.del("foo");
         }
-        if ( c.hset("foo", "baz", "bar") ) {
-            var value = c.hget("foo", "baz");
+        if ( con.hset("foo", "baz", "bar") == GRedis.FieldStatus.SUCCESS_VALUE_SET ) {
+            var value = con.hget("foo", "baz");
             stdout.printf("foo:baz is '%s'\n", value);
-            c.hdel("foo", "baz");
+            con.hdel("foo", "baz");
         }
     } catch (Error e) {
         stderr.printf("Oh noes, %s\n", e.message);
     }
+    return 0;
 }
 ```
 
