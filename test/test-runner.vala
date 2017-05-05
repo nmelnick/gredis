@@ -7,6 +7,7 @@ void main (string[] args) {
 	MainTest.add_tests();
 	HashTest.add_tests();
 	ListTest.add_tests();
+	SetTest.add_tests();
 	RedisMapTest.add_tests();
 	CleanupTest.add_tests();
 	Test.run();
