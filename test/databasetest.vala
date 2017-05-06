@@ -33,5 +33,16 @@ public class DatabaseTest {
 				assert_not_reached();
 			}
 		});
+		Test.add_func("/gredis/live/database/randomkey", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+                var k = c.randomkey();
+                assert( k != null );
+                assert( k.length > 0 );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
     }
 }

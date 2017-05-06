@@ -31,5 +31,13 @@ namespace GRedis {
         public Gee.List<string> keys(string pattern) throws RedisError {
             return oper_arraylist("KEYS %s", pattern).read_only_view;
         }
+
+        /**
+         * Return a random key from the currently selected database.
+         * @throw RedisError
+         */
+        public string? randomkey() throws RedisError {
+            return oper_string("RANDOMKEY");
+        }
     }
 }
