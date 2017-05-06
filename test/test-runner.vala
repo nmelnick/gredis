@@ -25,6 +25,7 @@ void main (string[] args) {
 	ListTest.add_tests();
 	SetTest.add_tests();
 	RedisMapTest.add_tests();
+	DatabaseTest.add_tests();
 	CleanupTest.add_tests();
 	Test.run();
 }

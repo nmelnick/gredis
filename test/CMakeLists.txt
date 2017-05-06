@@ -9,6 +9,7 @@ vala_precompile(VALA_C
 	listtest.vala
 	redismaptest.vala
 	settest.vala
+	databasetest.vala
 	cleanuptest.vala
 PACKAGES
 	${DEFAULT_PACKAGES}

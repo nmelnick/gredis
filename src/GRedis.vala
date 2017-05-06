@@ -43,7 +43,8 @@ namespace GRedis {
      *
      * One may access the underlying Hiredis context in the context property.
      */
-    public class Connection : Object, Operation, SingleOperation, SetOperation, HashOperation, ListOperation {
+    public class Connection : Object, Operation, DatabaseOperation,
+                              SingleOperation, SetOperation, HashOperation, ListOperation {
         private Redis.Context _context;
         /**
          * Underlying Hiredis context.

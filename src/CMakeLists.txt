@@ -2,6 +2,7 @@ include(ValaPrecompile)
 
 vala_precompile(GREDIS_VALA_C 
 	GRedis.vala
+	DatabaseOperation.vala
 	HashOperation.vala
 	ListOperation.vala
 	LogHandler.vala
