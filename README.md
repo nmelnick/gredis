@@ -10,10 +10,11 @@ Questions or comments, feel free to email, file an issue, or find me in #vala.
 ## Building/Installing on Linux/FreeBSD/*nix/WSL
 
 * Install requirements
-  * Vala 0.22 or higher
+  * Vala 0.30 or higher
   * glib 2.32 or higher
   * gee-0.8
   * libhiredis + libhiredis-dev (tested on 0.13+)
+  * A server running Redis 3.2 or higher 
 * Clone or download the repository
 * mkdir build
 * cd build
