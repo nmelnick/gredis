@@ -254,5 +254,17 @@ namespace GRedis {
             var reply = oper("UNLINK %s", key);
             return reply.integer;
         }
+
+        /**
+         * Returns all keys matching pattern. Returns a read-only Gee.List.
+         *
+         * @param pattern Search pattern
+         * @param start Start index
+         * @param end End index
+         */
+        // I'm not sure this belongs here.
+        public Gee.List<string> keys(string pattern) throws RedisError {
+            return oper_arraylist("KEYS %s", pattern).read_only_view;
+        }
     }
 }

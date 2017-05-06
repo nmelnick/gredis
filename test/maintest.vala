@@ -141,5 +141,22 @@ public class MainTest {
 				assert_not_reached();
 			}
 		});
+		Test.add_func("/gredis/live/single/keys", () => {
+			try {
+				GRedis.Connection c = new GRedis.Connection("127.0.0.1", 6379);
+				assert( c != null );
+                c.del("grkeystestone");
+                c.del("grkeystesttwo");
+				c.set( "grkeystestone", "1" );
+				c.set( "grkeystesttwo", "2" );
+				var array = c.keys("grkeys*");
+                assert( array != null );
+                assert( array.size == 2 );
+				assert( array.contains("grkeystestone") );
+				assert( array.contains("grkeystesttwo") );
+			} catch (Error e) {
+				assert_not_reached();
+			}
+		});
     }
 }
