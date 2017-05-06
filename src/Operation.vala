@@ -103,5 +103,23 @@ namespace GRedis {
             }
             return array;
         }
+
+        /**
+         * Run a hiredis operation with the given format and values, throw a
+         * RedisError on error, otherwise, return the array response as a Gee
+         * Set.
+         */
+        public Gee.Set<string> oper_set(string format, ...) throws RedisError {
+            var list = va_list();
+            var reply = voper( format, list );
+            if (reply.type != Redis.ReplyType.ARRAY) {
+                throw new RedisError.UNHANDLED("Unknown reply type %d: %s".printf(reply.type, (string) reply.str));
+            }
+            var array = new Gee.HashSet<string>();
+            for ( var i = 0; i < reply.element.length; i++ ) {
+                array.add( (string) reply.element[i].str );
+            }
+            return array;
+        }
     }
 }
