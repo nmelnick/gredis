@@ -11,8 +11,8 @@ before_install:
   - sudo add-apt-repository ppa:vala-team/ppa -y
   - sudo apt-get update -qq
   - sudo apt-get install -qq build-essential cmake libglib2.0-dev libgee-0.8
-         valac-0.30 gobject-introspection libgirepository1.0-dev redis
-  - sudo /etc/init.d/redis restart
+         valac-0.30 gobject-introspection libgirepository1.0-dev redis-server
+  - sudo /etc/init.d/redis-server restart
 
 before_script:
   - wget http://mirrors.kernel.org/ubuntu/pool/universe/h/hiredis/libhiredis-dev_0.13.3-2_amd64.deb
