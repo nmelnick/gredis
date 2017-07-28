@@ -74,6 +74,23 @@ namespace GRedis {
         }
 
         /**
+         * Run a hiredis operation with the given format and va_list, throw a
+         * RedisError on error, otherwise, return a Redis.Reply.
+         */
+        public Redis.Reply voper(string format, va_list l) throws RedisError {
+            lock (this._context) {
+                var reply = _context.v_command(format, l);
+                if (reply == null) {
+                    if (_context.err == Redis.RedisError.IO) {
+                        throw new RedisError.IO((string) _context.errstr);
+                    }
+                    throw new RedisError.GENERAL((string) _context.errstr);
+                }
+                return reply;
+            }
+        }
+
+        /**
          * Reconnect to the Redis server using the existing connection
          * credentials.
          */

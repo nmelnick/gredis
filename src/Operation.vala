@@ -34,16 +34,7 @@ namespace GRedis {
          * Run a hiredis operation with the given format and va_list, throw a
          * RedisError on error, otherwise, return a Redis.Reply.
          */
-        public Redis.Reply voper(string format, va_list l) throws RedisError {
-            var reply = context.v_command(format, l);
-            if (reply == null) {
-                if (context.err == Redis.RedisError.IO) {
-                    throw new RedisError.IO((string) context.errstr);
-                }
-                throw new RedisError.GENERAL((string) context.errstr);
-            }
-            return reply;
-        }
+        public abstract Redis.Reply voper(string format, va_list l) throws RedisError;
 
         /**
          * Run a hiredis operation with the given format and values, throw a
